@@ -24,6 +24,10 @@ Right now the game is in early development.
 
 To play Teraum, you need to know emsenn and ask them for instructions on how to log-in.
 
+After logging in, use `log <entry>` to take down a note for yourself. Use
+`log` to read your entries. They belong to your user account and remain
+available when you reconnect.
+
 ## Contributing
 
 Guidelines on how to contribute will come sometime before playtesting opens up.
