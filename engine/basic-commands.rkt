@@ -1,12 +1,15 @@
 #lang racket
 
 (require "area.rkt"
+         "log.rkt"
          "mudserver-struct.rkt"
          "operator.rkt"
+         "user.rkt"
          "world.rkt")
 
 (provide make-commands-command
          make-look-command
+         make-log-command
          make-move-command
          make-set-name!-command
          make-whoami-command)
@@ -33,6 +36,29 @@
                                          (character-location op)))))))
       (message-operator!
        op "You aren't anyplace.")))
+
+(define ((make-log-command op) args)
+  (define this-user (operator-user op))
+  (if (not this-user)
+      (message-operator! op "Log in first.")
+      (let* ([user-path (users-path (mudserver-users (operator-mudserver op)))]
+             [log-path (simplify-path (build-path user-path 'up "logs"))])
+        (if (hash-has-key? args 'line)
+            (let ([entry (string-trim (hash-ref args 'line))])
+              (if (string=? entry "")
+                  (message-operator! op "Syntax: log <entry>")
+                  (begin
+                    (append-thing-log! log-path this-user entry)
+                    (message-operator! op "Entry added to your log."))))
+            (let ([entries (read-thing-log log-path this-user)])
+              (message-operator!
+               op
+               (if (null? entries)
+                   "No log entries yet. Use log <entry> to add one."
+                   (string-join
+                    (for/list ([entry entries] [index (in-naturals 1)])
+                      (format "~a. ~a" index entry))
+                    "\n"))))))))
 
 (define ((make-move-command op) args)
   (if (not (hash-has-key? args 'line))

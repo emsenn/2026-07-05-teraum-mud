@@ -25,6 +25,7 @@
                    #:world (mudserver-world server)))
   (set-operator-command! op 'commands (make-commands-command op))
   (set-operator-command! op 'look (make-look-command op))
+  (set-operator-command! op 'log (make-log-command op))
   (set-operator-command! op 'move (make-move-command op))
   (set-operator-command! op 'quit (make-quit-command op))
   ;(set-operator-command! op 'set-name! (make-set-name!-command op))
